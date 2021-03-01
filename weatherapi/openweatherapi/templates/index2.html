@@ -70,8 +70,11 @@
 <script>
     $(document).ready(function() {
 
-        const url = window.location.href;
+        $( "#button-wind" ).trigger( "click" );
+        $("#inner").hide();
+        $("#leaf").hide();
 
+        const url = window.location.href;
         $("#city-search").keyup(function(e){
             var code = e.key;
             if(code==="Enter"){
@@ -106,31 +109,57 @@
                 if(resp["cod"] == 200){
                     $('#msg').html("");
                 $('.temp').html(Math.round(resp["main"]["temp"])+'<span>c</span>');
-                $('#summaryy').html(resp["weather"][0]["description"]);
                 $('#date').html(resp["coord"]["lat"]+' | '+resp["coord"]["lon"]);
                 dmain = resp["weather"][0]["main"];
                 switch(dmain){
                     case 'Clear':
                         $( "#button-sun" ).trigger( "click" );
+                        $("#outer").show();
+                        $("#inner").show();
+                        $("#leaf").show();
                         break;
                     case 'Thunderstorm':
+                    case 'Tornado':{
                         $( "#button-thunder" ).trigger( "click" );
+                        $("#outer").show();
+                        $("#inner").show();
+                        $("#leaf").show();
                         break;
+                    }
                     case 'Drizzle':
+                    case 'Rain':{
                         $( "#button-rain" ).trigger( "click" );
+                        $("#outer").show();
+                        $("#inner").show();
+                        $("#leaf").show();
                         break;
-                    case 'Rain':
-                        $( "#button-rain" ).trigger( "click" );
-                        break;
+                    }
                     case 'Snow':
                         $( "#button-snow" ).trigger( "click" );
+                        $("#outer").show();
+                        $("#inner").show();
+                        $("#leaf").show();
                         break;
-                    case 'Clouds':
+                    case 'squalls':
+                    case 'Dust':
+                    case 'Sand':{
                         $( "#button-wind" ).trigger( "click" );
+                        $("#outer").show();
+                        $("#inner").show();
+                        $("#leaf").show();
                         break;
+                    }
                     default:
                         $( "#button-wind" ).trigger( "click" );
+                        $("#inner").show();
+                        $("#outer").hide();
+                        $("#leaf").hide();
                 }
+
+                var summaryy =  $('#summaryy');
+                summaryy.html(resp["weather"][0]["description"]);
+                TweenMax.fromTo(summaryy, 1.5, {x: 30}, {opacity: 1, x: 0, ease: Power4.easeOut});
+                
                 } else{
                     $('#msg').html(resp["message"]);
                 }
