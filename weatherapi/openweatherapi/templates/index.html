@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Weather App</title>
+
+  <link rel="stylesheet" type="text/css" href="{% static '/semantic.min.css' %}">
+
+  <style type="text/css">
+    .masthead{
+        height: 100%;
+        width: 100%;
+        color: white !important;
+    }
+    .marg{
+        margin-top: 30px !important;
+    }
+  </style>
+  <script src="{% static '/jquery-3.5.1.min.js' %}"></script>
+  <script src="{% static '/semantic.min.js' %}"></script>
+  <script>
+    $(document)
+        .ready(function() {
+
+      $('select.dropdown')
+        .dropdown();
+
+        var content = []
+        {% for r in name_list %}
+            var obj = {};
+            obj['title'] = '{{r.name}}';
+            content.push(obj);
+        {% endfor %}
+
+        $('.ui.fluid.search').search({
+            source: content
+        });
+    
+    });
+  </script>
+</head>
+<body>
+    <div class="ui inverted vertical masthead center aligned segment">
+
+        <div class="ui container">
+            <div class="ui fluid search">
+                <div class="ui fluid icon input">
+                  <input class="prompt" type="text" placeholder="Search cities...">
+                  <i class="search icon"></i>
+                </div>
+                <div class="results"></div>
+            </div>
+        </div>
+
+        <div class="ui inverted vertical segment marg">
+            <div class="ui middle aligned stackable grid container">
+              <div class="row">
+                <div class="eight wide column">
+                  <h1>61</h1>
+                  <p>desc</p>
+                </div>
+                <div class="six wide right floated column">
+                  icon
+                </div>
+              </div>
+              <div class="row">
+                ##
+              </div>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    $(document).ready(function() {
+
+        const url = window.location.href;
+
+        $("input.prompt").keyup(function(e){
+            var code = e.key;
+            if(code==="Enter"){
+                var value = $("input.prompt").val();
+                if (value != ""){
+                    $("div.ui.fluid.search").addClass('loading disabled');
+                    getdata($("input.prompt").val());
+                }
+            }
+        });
+
+        $("input.prompt").blur(function(e){
+            var value = $("input.prompt").val();
+            if (value != ""){
+                $("div.ui.fluid.search").addClass('loading disabled');
+                getdata($("input.prompt").val());
+            }
+        });
+
+        function getdata(city){
+            data = {
+                "city_name" : city
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                dataType: 'json'
+            })
+            .done(function(resp){
+                console.log(resp);
+                $("div.ui.fluid.search").removeClass('loading disabled');
+            })
+            .fail(function(resp){
+                console.log(resp);
+                $("div.ui.fluid.search").removeClass('loading disabled');
+            });
+        }  
+    });
+</script>
+
+</body>
