@@ -14,4 +14,9 @@ cd weatherapi
 python manage.py runserver 8081
 ```
 app url - http://localhost:8081/weather
+
+## Demo
+
+![](showCase.gif)
+
 github - https://github.com/AsfanUlla/WeatherApp
